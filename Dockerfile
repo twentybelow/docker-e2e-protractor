@@ -1,34 +1,35 @@
 FROM ubuntu:trusty
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV DEBCONF_NONINTERACTIVE_SEEN true
+RUN apt-get install -y wget
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+RUN sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
 
-MAINTAINER Annamaria Szegedi <aszegedi@hortonworks.com>
+RUN apt-get update
+RUN apt-get -y upgrade
 
-RUN apt-get -y update
-RUN apt-get install -y -q software-properties-common wget
-RUN add-apt-repository -y ppa:mozillateam/firefox-next
-RUN add-apt-repository -y ppa:chris-lea/node.js
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-RUN echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
-RUN apt-get update -y
-RUN apt-get install -y -q \
-  firefox \
-  google-chrome-stable \
-  openjdk-7-jre-headless \
-  nodejs \
-  xvfb
+RUN apt-get install -y software-properties-common python-software-properties
+RUN apt-get install -y curl
+RUN curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
+RUN sudo apt-get install -y nodejs
 
-RUN npm install -g protractor
+RUN apt-get install -y firefox google-chrome-stable xvfb default-jre
+
+RUN apt-get clean
+
+RUN npm install -g jasmine-node karma-firefox-launcher karma-chrome-launcher protractor
+
+RUN npm update
 RUN webdriver-manager update
 
-RUN mkdir -p /protractor
+WORKDIR /protractor/
 
-ADD protractor.sh /protractor.sh
+COPY /scripts/ /protractor/scripts/
 
-WORKDIR /protractor
-ENTRYPOINT ["sh", "/protractor.sh"]
+RUN chmod -R +x .
 
-#!/bin/bash
-#docker run -it --rm --net=host -v /dev/shm:/dev/shm -v $(pwd):/protractor aszegedi/protractor $@
-#protractor.sh [protractor options]
+ENV HOME=/protractor/project
+
+CMD ["/protractor/scripts/run-e2e-tests.sh"]
+
+#docker run -it --name protractor-runner -v /dev/shm:/dev/shm -v $(pwd):/protractor/project aszegedi/protractor
+#docker run -it --name protractor-runner -v /dev/shm:/dev/shm -v $(pwd):/protractor/project -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY aszegedi/protractor
