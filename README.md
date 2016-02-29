@@ -1,21 +1,23 @@
 # About
-Docker image for [ULUWATU functional E2E tests](https://github.com/sequenceiq/uluwatu-e2e-protractor) test project.
+Docker image for executing test cases in a Docker container from [ULUWATU functional E2E tests](https://github.com/sequenceiq/uluwatu-e2e-protractor) test project.
 
 The [Dockerfile](Dockerfile) was design based on the following projects:
 - [Protractor and headless Chrome on Docker](http://float-middle.com/protractor-and-headless-chrome-on-docker-with-video-tutorial/) or [Docker image of Protractor with headless Chrome](https://github.com/jciolek/docker-protractor-headless)
 - [docker-protractor](https://github.com/School-Improvement-Network/docker-protractor)
 
 # Docker Run
-1. Provide valid and appropriate values for base test parameters in the [run script](scripts/run-e2e-tests.sh):
-  - BASE_URL=https://pre-prod-accounts.sequenceiq.com/
-  - USERNAME
-  - PASSWORD
-  - IAMROLE
-  - SSHKEY
-2. Open the local folder where the [ULUWATU functional E2E tests](https://github.com/sequenceiq/uluwatu-e2e-protractor) project was cloned from GitHub.
-3. Execute the following [Docker](https://docs.docker.com/engine/installation/) command: ```docker run -it --rm --name protractor-runner --env-file /utils/testenv -v /dev/shm:/dev/shm -v $(pwd):/protractor/project aszegedi/protractor```
-  - `/utils/testenv` the location of the `testenv` file on the local machine
-  - `aszegedi/protractor` the built docker image name
+1. Clone this repository.
+2. Build the [Docker image](https://docs.docker.com/engine/reference/commandline/build/#tag-image-t).
+3. Provide valid and appropriate values for base test parameters in the [environment file](utils/testenv). The following variables should be set:
+  - BASE_URL=<https://pre-prod-accounts.sequenceiq.com/>
+  - USERNAME=<testing@something.com>
+  - PASSWORD=<password>
+  - IAMROLE=<arn:aws:iam::1234567890:role/userrole>
+  - SSHKEY=<AAAAB3NzaC1+soon...etc.>
+4. Open the local folder where the [ULUWATU functional E2E tests](https://github.com/sequenceiq/uluwatu-e2e-protractor) project has been cloned from GitHub.
+5. Execute the following [Docker](https://docs.docker.com/engine/installation/) command from the root of the test project: ```docker run -it --rm --name protractor-runner --env-file <./utils/testenv> -v /dev/shm:/dev/shm -v $(pwd):/protractor/project <docker image>```
+  - `./utils/testenv` the location of the `testenv` file on the your machine
+  - `docker image` your docker image name
 
 # Advanced options
 Based on the [Webnicer project](https://hub.docker.com/r/webnicer/protractor-headless/).
