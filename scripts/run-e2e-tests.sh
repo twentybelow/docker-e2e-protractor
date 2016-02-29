@@ -1,10 +1,4 @@
 #!/bin/bash
-# Set the test parameters for the used environment variables
-export BASE_URL=https://pre-prod-accounts.sequenceiq.com/
-export USERNAME=[user@name]
-export PASSWORD=[password]
-export IAMROLE=arn:aws:iam::1234567890:role/userrole
-export SSHKEY=AAAAB3NzaC1+soon
 # Move to the Protractor test project folder
 cd $HOME
 
