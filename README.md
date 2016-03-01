@@ -9,11 +9,11 @@ The [Dockerfile](Dockerfile) was design based on the following projects:
 1. Clone this repository.
 2. Build the [Docker image](https://docs.docker.com/engine/reference/commandline/build/#tag-image-t).
 3. Provide valid and appropriate values for base test parameters in the [environment file](utils/testenv). The following variables should be set:
-  - BASE_URL=<https://pre-prod-accounts.sequenceiq.com/>
-  - USERNAME=<testing@something.com>
-  - PASSWORD=<password>
-  - IAMROLE=<arn:aws:iam::1234567890:role/userrole>
-  - SSHKEY=<AAAAB3NzaC1+soon...etc.>
+  - BASE_URL=`https://pre-prod-accounts.sequenceiq.com/`
+  - USERNAME=`testing@something.com`
+  - PASSWORD=`password`
+  - IAMROLE=`arn:aws:iam::1234567890:role/userrole`
+  - SSHKEY=`AAAAB3NzaC1+soon...etc.`
 4. Open the local folder where the [ULUWATU functional E2E tests](https://github.com/sequenceiq/uluwatu-e2e-protractor) project has been cloned from GitHub.
 5. Execute the following [Docker](https://docs.docker.com/engine/installation/) command from the root of the test project: ```docker run -it --rm --name protractor-runner --env-file <./utils/testenv> -v /dev/shm:/dev/shm -v $(pwd):/protractor/project <docker image>```
   - `./utils/testenv` the location of the `testenv` file on the your machine
