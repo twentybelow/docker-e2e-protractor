@@ -20,7 +20,7 @@ RUN curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
 RUN apt-get install -y nodejs build-essential
 
 # Latest Ubuntu Firefox, Google Chrome, XVFB and JRE installs
-RUN apt-get install -y git xvfb firefox google-chrome-stable default-jre
+RUN apt-get install -y xvfb firefox google-chrome-stable default-jre
 # Clean clears out the local repository of retrieved package files. Run apt-get clean from time to time to free up disk space.
 RUN apt-get clean
 
@@ -51,10 +51,10 @@ RUN npm install --unsafe-perm -g jasmine-reporters jasmine-spec-reporter protrac
 WORKDIR /protractor/
 # Copy the run sript/s from local folder to the container's related folder
 COPY /scripts/ /protractor/scripts/
-# Set the owner recursively for the new folders
-RUN chmod -R +x .
 # Set the HOME environment variable for the test project
 ENV HOME=/protractor/project
+# Set the owner recursively for the new folders
+RUN chmod -R +x .
 # Container entry point
 CMD ["/protractor/scripts/run-e2e-tests.sh"]
 

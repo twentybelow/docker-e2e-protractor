@@ -15,9 +15,9 @@ export DISPLAY=:21.0
 #echo "Finished starting webdriver"
 #sleep 20
 
-echo "Running Uluwatu E2E Tests"
-# The 'uluwatu-e2e-protractor' test project launch configuration file. Right now this is hard-coded here. 
-protractor e2e.conf.js
+echo "Running Protractor tests"
+# The 'uluwatu-e2e-protractor' test project launch configuration file (e2e.conf.js) should be passed here.
+protractor $TESTCONF
 a=$?
-echo "Done Uluwatu test running"
+echo "Protractor tests have done"
 exit $a
