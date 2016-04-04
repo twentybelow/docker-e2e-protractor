@@ -5,7 +5,7 @@ cd $HOME
 # X11 for Ubuntu is not configured! The following configurations are needed for XVFB.
 
 # Make a new display :21 with virtual screen 0 with resolution 1024x768 24dpi
-Xvfb :21 -screen 0 1024x768x24 &
+Xvfb :21 -screen 0 1920x1080x24 &
 # Export the previously created display
 export DISPLAY=:21.0
 
