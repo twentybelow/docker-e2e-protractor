@@ -82,10 +82,12 @@ make run
 
 The rules are same as in case of [To run your test cases in this image](#to-run-your-test-cases-in-this-image) or [To run Uluwatu E2E tests in this image](#to-run-uluwatu-e2e-tests-in-this-image).
 
-## /dev/shm
+## In-memory File System /dev/shm (Linux only)
 Docker has hardcoded value of 64MB for `/dev/shm`. Error can be occurred, because of [page crash](https://bugs.chromium.org/p/chromedriver/issues/detail?id=1097) on memory intensive pages. The easiest way to mitigate the problem is share `/dev/shm` with the host.
 
 This needs to be done during Docker build gets the [option](https://github.com/docker/docker/issues/2606) `--shm-size`.
+
+For Mac OSX users [this conversation](http://unix.stackexchange.com/questions/151984/how-do-you-move-files-into-the-in-memory-file-system-mounted-at-dev-shm) can be useful.
 
 <sub>Based on the [Webnicer project](https://hub.docker.com/r/webnicer/protractor-headless/).</sub>
 
