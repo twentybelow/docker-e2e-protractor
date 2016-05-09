@@ -1,22 +1,26 @@
-FROM ubuntu:trusty
+FROM ubuntu:xenial
 MAINTAINER SequenceIQ
 
 # Debian package configuration use the noninteractive frontend: It never interacts with the user at all, and makes the default answers be used for all questions.
 # http://manpages.ubuntu.com/manpages/wily/man7/debconf.7.html
 ENV DEBIAN_FRONTEND noninteractive
 
+# Update is used to resynchronize the package index files from their sources. An update should always be performed before an upgrade.
+RUN apt-get update
+# It is configuring of all unconfigured packages if there has been a problem with an update and some packages' configuration is still pending.
+RUN dpkg --configure -a
+RUN apt-get install -y apt-utils
+
 # Latest Googgle Chrome installation package
 RUN apt-get install -y wget
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
 RUN sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
 
-# Update is used to resynchronize the package index files from their sources. An update should always be performed before an upgrade.
-RUN apt-get update
-
 # Latest Nodejs with npm install
 # https://github.com/nodesource/distributions#installation-instructions
 RUN apt-get install -y software-properties-common python-software-properties
 RUN apt-get install -y curl
+RUN apt-get install -y sudo
 RUN curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
 RUN apt-get install -y nodejs build-essential
 
@@ -46,7 +50,7 @@ RUN webdriver-manager update
 ENV NODE_PATH /usr/lib/node_modules
 
 # Global reporters for protractor
-RUN npm install --unsafe-perm -g jasmine-reporters jasmine-spec-reporter protractor-jasmine2-html-reporter protractor-html-screenshot-reporter
+RUN npm install --unsafe-perm -g jasmine-reporters jasmine-spec-reporter protractor-jasmine2-html-reporter
 
 # Set the working directory
 WORKDIR /protractor/
@@ -55,7 +59,7 @@ COPY /scripts/ /protractor/scripts/
 # Set the HOME environment variable for the test project
 ENV HOME=/protractor/project
 # Set the owner recursively for the new folders
-RUN chmod -R +x .
+RUN chmod -Rf 777 .
 # Container entry point
 CMD ["/protractor/scripts/run-e2e-tests.sh"]
 
