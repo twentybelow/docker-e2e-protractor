@@ -1,6 +1,6 @@
 # About
 
-**General Docker image for executing headless Google Chrome or Firefox Protractor e2e test cases in a Docker container. The created image does not contain any javascript test code or project. This is the environment for running Protractor test cases. The image is test project independent.**
+**General Docker image for executing headless Google Chrome or Firefox Protractor e2e test cases in a Docker container. The created image does not contain any test code or project. This is the environment for running Protractor test cases. So this image is test project independent.**
 
 The [Dockerfile](Dockerfile) was design based on the following projects:
 - [Protractor and headless Chrome on Docker](http://float-middle.com/protractor-and-headless-chrome-on-docker-with-video-tutorial/) or [Docker image of Protractor with headless Chrome](https://github.com/jciolek/docker-protractor-headless)
@@ -10,19 +10,19 @@ The [Dockerfile](Dockerfile) was design based on the following projects:
 # To run your test cases in this image
 
 1. Clone this repository.
-2. If you have any environment variable which is used for your test project, provide here [environment file](utils/testenv). The following variable is mandatory for the Docker image:
+2. If you have any environment variable which is used for your test project, provide here [environment file](utils/testenv). **The following variable is mandatory for the Docker image**:
   - TESTCONF=`e2e.conf.js` here should add your e2e test configuration JS file (for example `e2e.conf.js`)
 3. Build the [Docker image](https://docs.docker.com/engine/reference/commandline/build/#tag-image-t).
-```
-docker build -t sequenceiq/protractor-runner .
-```
+    ```
+    docker build -t hortonworks/protractor-runner .
+    ```
 4. Execute your Protractor test configuration in [Docker](https://docs.docker.com/engine/installation/) container:
-```
-docker run -it --rm --name protractor-runner --env-file utils/testenv -v $(PWD):/protractor/project sequenceiq/protractor-runner
-```
+    ```
+    docker run -it --rm --name protractor-runner --env-file utils/testenv -v $(PWD):/protractor/project hortonworks/protractor-runner
+    ```
 
   - `utils/testenv` the location (full path) of the `testenv` file on your machine
-  - `sequenceiq/protractor-runner` built Docker image name
+  - `hortonworks/protractor-runner` built Docker image name
   - `$(PWD)` or `pwd` the root folder of your Protractor test project
     - For example the local folder where the [ULUWATU functional E2E tests](https://github.com/sequenceiq/uluwatu-e2e-protractor) project has been cloned from GitHub.
     - The use of **PWD is optional**, you do not need to navigate to the Protractor test project root. If it is the case, you should add the full path of the root folder instead of the `$(PWD)`.
@@ -32,7 +32,7 @@ docker run -it --rm --name protractor-runner --env-file utils/testenv -v $(PWD):
 ## Protractor direct connect
 Protractor can test directly using Chrome Driver or Firefox Driver, [bypassing any Selenium Server](https://github.com/angular/protractor/blob/master/docs/server-setup.md#connecting-directly-to-browser-drivers). **The advantage of direct connect is that your test project start up and run faster.**
 
-To use this, you should change your [config file](https://github.com/sequenceiq/uluwatu-e2e-protractor/blob/master/e2e.conf.js#L15):
+To use this, you should change your [config file](https://github.com/sequenceiq/uluwatu-e2e-protractor/blob/master/e2e.conf.js#L20):
 ```
 directConnect: true
 ```
@@ -41,7 +41,7 @@ directConnect: true
 ## No sandbox for Google Chrome
 Chrome does not support to [running it in container](https://github.com/travis-ci/travis-ci/issues/938#issuecomment-77785455). So you need to start the Chrome Driver with `--no-sandbox` argument to avoid errors.
 
-In the [Protractor configuration file](https://github.com/sequenceiq/uluwatu-e2e-protractor/blob/master/e2e.conf.js#L19-L27):
+In the [Protractor configuration file](https://github.com/sequenceiq/uluwatu-e2e-protractor/blob/master/e2e.conf.js#L25-L30):
 ```
 capabilities: {
      'browserName': 'chrome',
