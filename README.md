@@ -10,8 +10,10 @@ The [Dockerfile](Dockerfile) was design based on the following projects:
 # To run your test cases in this image
 
 1. Clone this repository.
-2. If you have any environment variable which is used for your test project, provide here [environment file](utils/testenv). **The following variable is mandatory for the Docker image**:
-  - TESTCONF=`e2e.conf.js` here should add your e2e test configuration JS file (for example `e2e.conf.js`)
+2. If you have any environment variable which is used for your test project, provide here [environment file](utils/testenv).
+3. **The TESTCONF variable is mandatory for the Docker image**. Here should add your e2e test configuration JS file (for example `e2e.conf.js`). Beside this you can provide additional parameters here for protractor:
+  - TESTCONF=`e2e.conf.js`
+  - TESTCONF=`e2e.conf.js --suite smoke`
 3. Build the [Docker image](https://docs.docker.com/engine/reference/commandline/build/#tag-image-t).
     ```
     docker build -t hortonworks/protractor-runner .
