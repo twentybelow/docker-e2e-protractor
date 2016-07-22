@@ -9,25 +9,23 @@ The [Dockerfile](Dockerfile) was design based on the following projects:
 
 # To run your test cases in this image
 
-1. Clone this repository.
+1. Pull the `hortonworks/docker-e2e-protractor` image from [DockerHub](https://hub.docker.com/r/hortonworks/docker-e2e-protractor/)
 2. If you have any environment variable which is used for your test project, provide here [environment file](utils/testenv).
-3. **The TESTCONF variable is mandatory for the Docker image**. Here should add your e2e test configuration JS file (for example `e2e.conf.js`). Beside this you can provide additional parameters here for protractor:
-  - TESTCONF=`e2e.conf.js`
-  - TESTCONF=`e2e.conf.js --suite smoke`
-3. Build the [Docker image](https://docs.docker.com/engine/reference/commandline/build/#tag-image-t).
+3. **The Protractor configuration file is vital for the Docker image**. Add your e2e test configuration JS file (for example `e2e.conf.js`). Beside this you can provide additional parameters here for protractor.
+4. You can see some example for execute your protractor tests in this [Docker](https://docs.docker.com/engine/installation/) container:
     ```
-    docker build -t hortonworks/protractor-runner .
-    ```
-4. Execute your Protractor test configuration in [Docker](https://docs.docker.com/engine/installation/) container:
-    ```
-    docker run -it --rm --name protractor-runner --env-file utils/testenv -v $(PWD):/protractor/project hortonworks/protractor-runner
+    docker run -it --rm --name protractor-runner -v $(PWD):/protractor/project hortonworks/docker-e2e-protractor e2e.conf.js    
+    docker run -it --rm --name protractor-runner --env-file utils/testenv -v $(PWD):/protractor/project hortonworks/docker-e2e-protractor e2e.conf.js --suite smoke
+    docker run -it --rm --name protractor-runner -e USERNAME=teszt.elek -e PASSWORD=Teszt12 -v $(PWD):/protractor/project hortonworks/docker-e2e-protractor e2e.conf.js --suite regression
+    docker run -it --rm --name protractor-runner --privileged --net=host -v /dev/shm:/dev/shm -v $(PWD):/protractor/project hortonworks/docker-e2e-protractor e2e.conf.js --suite smoke    
     ```
 
-  - `utils/testenv` the location (full path) of the `testenv` file on your machine
-  - `hortonworks/protractor-runner` built Docker image name
-  - `$(PWD)` or `pwd` the root folder of your Protractor test project
+  - `utils/testenv` the location (full path) of the `testenv` file on your machine. This file can contain environment variables for your new container.
+  - `USERNAME=teszt.ele` a single environment variable that is passed for the new container.
+  - `$(PWD)` or `pwd` the root folder of your Protractor test project:
     - For example the local folder where the [ULUWATU functional E2E tests](https://github.com/sequenceiq/uluwatu-e2e-protractor) project has been cloned from GitHub.
     - The use of **PWD is optional**, you do not need to navigate to the Protractor test project root. If it is the case, you should add the full path of the root folder instead of the `$(PWD)`.
+  - `e2e.conf.js --suite regression` in case of you defined [test suites](http://www.protractortest.org/#/page-objects#configuring-test-suites) in your Protractor configuration, you can add these here
 
 # Advanced options and information
 
