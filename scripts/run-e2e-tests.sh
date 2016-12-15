@@ -21,7 +21,7 @@ Xvfb :10 -screen 0 1920x1080x24 2>&1 >/dev/null &
 #echo "Starting webdriver"
 #node ./node_modules/protractor/bin/webdriver-manager start [OR webdriver-manager start] &
 #echo "Finished starting webdriver"
-#sleep 20
+sleep 20
 
 echo "Running Protractor tests"
 # The 'uluwatu-e2e-protractor' test project launch configuration file (e2e.conf.js) should be passed here.
