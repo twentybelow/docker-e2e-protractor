@@ -1,5 +1,3 @@
-# About
-
 **General Docker image for executing headless Google Chrome or Firefox Protractor e2e test cases in a Docker container. The created image does not contain any test code or project. This is the environment for running Protractor test cases. So this image is test project independent.**
 
 The [Dockerfile](Dockerfile) was design based on the following projects:
