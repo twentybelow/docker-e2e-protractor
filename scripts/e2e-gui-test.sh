@@ -40,7 +40,7 @@ else
     --env-file $ENVFILE \
     -v $(pwd):/protractor/project \
     -v /dev/shm:/dev/shm \
-    hortonworks/docker-e2e-protractor protractor e2e.conf.js --suite $TEST_SUITE
+    hortonworks/docker-e2e-protractor e2e.conf.js --suite $TEST_SUITE
     RESULT=$?
 fi
 
