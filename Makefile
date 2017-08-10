@@ -13,6 +13,9 @@ run:
 				-v $(PWD):/protractor/project \
 				hortonworks/docker-e2e-protractor e2e.conf.js
 
+run-ci:
+				./scripts/e2e-gui-test.sh
+
 run-regression:
 				docker run -it \
 				--rm \
