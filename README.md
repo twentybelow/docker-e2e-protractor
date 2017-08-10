@@ -23,7 +23,7 @@ The [Dockerfile](Dockerfile) was design based on the following projects:
   - `$(PWD)` or `pwd` the root folder of your Protractor test project:
     - For example the local folder where the [ULUWATU functional E2E tests](https://github.com/sequenceiq/uluwatu-e2e-protractor) project has been cloned from GitHub.
     - The use of **PWD is optional**, you do not need to navigate to the Protractor test project root. If it is the case, you should add the full path of the root folder instead of the `$(PWD)`.
-  - `e2e.conf.js --suite regression` in case of you defined [test suites](http://www.protractortest.org/#/page-objects#configuring-test-suites) in your Protractor configuration, you can add these here
+  - `protractor e2e.conf.js --suite regression` in case of you defined [test suites](http://www.protractortest.org/#/page-objects#configuring-test-suites) in your Protractor configuration, you can add these here
 
 # Advanced options and information
 
@@ -47,7 +47,10 @@ capabilities: {
       * Chrome is not allowed to create a SUID sandbox when running inside Docker
       */
      'chromeOptions': {
-         'args': ['no-sandbox']
+         'args': [
+            'no-sandbox',
+            '--disable-web-security'
+         ]
      }
 },
 ```
@@ -61,6 +64,54 @@ The `--privileged` flag gives the container almost the same privileges to the ho
 
 <sub>Based on the [Webnicer project](https://hub.docker.com/r/webnicer/protractor-headless/).</sub>
 
+## Run tests in CI
+
+The project's Makefile contains several rules what you can use with your CI jobs. For example:
+```
+run-ci:
+				./scripts/e2e-gui-test.sh
+```
+> As you can see here the project contains a predefined bash script to automate launch and test environment setup before tests execution.
+
+If you do not want to use Make, here is a code snippet that you can apply:
+
+```sh
+echo "Refresh the Test Runner Docker image"
+docker pull hortonworks/docker-e2e-protractor
+
+export TEST_CONTAINER_NAME=gui-e2e
+
+echo "Checking stopped containers"
+if [[ -n "$(docker ps -a -f status=exited -f status=dead -q)" ]]; then
+  echo "Delete stopped containers"
+  docker rm $(docker ps -a -f status=exited -f status=dead -q)
+else
+  echo "There is no Exited or Dead container"
+fi
+
+echo "Checking " $TEST_CONTAINER_NAME " container is running"
+if [[ "$(docker inspect -f {{.State.Running}} $TEST_CONTAINER_NAME 2> /dev/null)" == "true" ]]; then
+  echo "Delete the running " $TEST_CONTAINER_NAME " container"
+  docker rm -f $TEST_CONTAINER_NAME
+fi
+
+CLOUD_URL_RESPONSE=$(curl -k --write-out %{http_code} --silent --output /dev/null $CLOUD_URL/sl)
+echo $CLOUD_URL " HTTP status code is: " $CLOUD_URL_RESPONSE
+if [[ $CLOUD_URL_RESPONSE -ne 200 ]]; then
+    echo $CLOUD_URL " Web GUI is not accessible!"
+    RESULT=1
+else
+    docker run -i \
+    --privileged \
+    --rm \
+    --name $TEST_CONTAINER_NAME \
+    --env-file $ENVFILE \
+    -v $(pwd):/protractor/project \
+    -v /dev/shm:/dev/shm \
+    hortonworks/docker-e2e-protractor protractor e2e.conf.js --suite $TEST_SUITE
+    RESULT=$?
+fi
+```
 ## Makefile
 We created a very simple [Makefile](https://github.com/sequenceiq/docker-e2e-protractor/blob/master/Makefile) to be able build and run easily our Docker image:
 ```
