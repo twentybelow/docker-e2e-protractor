@@ -25,13 +25,13 @@ RUN apt-get update -qqy \
     libfreetype6 \
     libfontconfig
 
-# Nodejs 6 with npm install
+# Nodejs 8 with npm install
 # https://github.com/nodesource/distributions#installation-instructions
 RUN apt-get update -qqy \
   && apt-get -qqy install \
     software-properties-common \
     python-software-properties
-RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 RUN apt-get update -qqy \
   && apt-get -qqy install \
     nodejs \
@@ -62,7 +62,7 @@ RUN rm -fr /root/tmp
 # Jasmine and protractor global install
 # 2. Step to fixing the error for Node.js native addon build tool (node-gyp)
 # https://github.com/nodejs/node-gyp/issues/454
-RUN npm install --unsafe-perm -g protractor \
+RUN npm install --unsafe-perm --save-exact -g protractor@5.0.0 \
 # Get the latest Google Chrome driver
   && npm update \
 # Get the latest WebDriver Manager
