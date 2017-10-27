@@ -1,7 +1,7 @@
 all: build run
 
 build:
-				docker build -t hortonworks/docker-e2e-protractor .
+				docker build -t hortonworks/docker-e2e-protractor:release-2.1 .
 
 run:
 				docker run -it \
@@ -11,7 +11,7 @@ run:
 				--net=host \
 				--env-file utils/testenv \
 				-v $(PWD):/protractor/project \
-				hortonworks/docker-e2e-protractor protractor e2e.conf.js
+				hortonworks/docker-e2e-protractor:release-2.1 protractor e2e.conf.js
 
 run-ci:
 				./scripts/e2e-gui-test.sh
@@ -24,7 +24,7 @@ run-regression:
 				--net=host \
 				--env-file utils/testenv \
 				-v $(PWD):/protractor/project \
-				hortonworks/docker-e2e-protractor protractor e2e.conf.js --suite regression
+				hortonworks/docker-e2e-protractor:release-2.1 protractor e2e.conf.js --suite regression
 
 run-smoke:
 				docker run -it \
@@ -34,7 +34,7 @@ run-smoke:
 				--net=host \
 				--env-file utils/testenv \
 				-v $(PWD):/protractor/project \
-				hortonworks/docker-e2e-protractor protractor e2e.conf.js --suite smoke
+				hortonworks/docker-e2e-protractor:release-2.1 protractor e2e.conf.js --suite smoke
 
 run-from-linux:
 				docker run -it \
@@ -45,7 +45,7 @@ run-from-linux:
 				--env-file utils/testenv \
 				-v /dev/shm:/dev/shm \
 				-v $(PWD):/protractor/project \
-				hortonworks/docker-e2e-protractor protractor e2e.conf.js --suite smoke
+				hortonworks/docker-e2e-protractor:release-2.1 protractor e2e.conf.js --suite smoke
 
 .PHONY:
 				all
