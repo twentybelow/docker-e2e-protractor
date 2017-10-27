@@ -6,7 +6,6 @@ The [Dockerfile](Dockerfile) was design based on the following projects:
 - [Protractor-Firefox-Headless-Docker](https://github.com/cfalguiere/Protractor-Firefox-Headless-Docker)
 
 # To run your test cases in this image
-
 1. Pull the `hortonworks/docker-e2e-protractor` image from [DockerHub](https://hub.docker.com/r/hortonworks/docker-e2e-protractor/)
 2. If you have any environment variable which is used for your test project, provide here [environment file](utils/testenv).
 3. **The Protractor configuration file is vital for the Docker image**. Add your e2e test configuration JS file (for example `e2e.conf.js`). Beside this you can provide additional parameters here for protractor.
@@ -21,7 +20,7 @@ The [Dockerfile](Dockerfile) was design based on the following projects:
   - `utils/testenv` the location (full path) of the `testenv` file on your machine. This file can contain environment variables for your new container.
   - `USERNAME=teszt.ele` a single environment variable that is passed for the new container.
   - `$(PWD)` or `pwd` the root folder of your Protractor test project:
-    - For example the local folder where the [ULUWATU functional E2E tests](https://github.com/sequenceiq/uluwatu-e2e-protractor) project has been cloned from GitHub.
+    - For example the local folder where the your functional E2E test project has been cloned from GitHub.
     - The use of **PWD is optional**, you do not need to navigate to the Protractor test project root. If it is the case, you should add the full path of the root folder instead of the `$(PWD)`.
   - `e2e.conf.js --suite regression` in case of you defined [test suites](http://www.protractortest.org/#/page-objects#configuring-test-suites) in your Protractor configuration, you can add these here
 
@@ -30,7 +29,7 @@ The [Dockerfile](Dockerfile) was design based on the following projects:
 ## Protractor direct connect
 Protractor can test directly using Chrome Driver or Firefox Driver, [bypassing any Selenium Server](https://github.com/angular/protractor/blob/master/docs/server-setup.md#connecting-directly-to-browser-drivers). **The advantage of direct connect is that your test project start up and run faster.**
 
-To use this, you should change your [config file](https://github.com/sequenceiq/uluwatu-e2e-protractor/blob/master/e2e.conf.js#L20):
+To use this, you should change your protractor configuration file as desbribed in the [related Protractor Documentation](https://github.com/angular/protractor/blob/master/docs/server-setup.md#connecting-directly-to-browser-drivers):
 ```
 directConnect: true
 ```
@@ -39,7 +38,7 @@ directConnect: true
 ## No sandbox for Google Chrome
 Chrome does not support to [running it in container](https://github.com/travis-ci/travis-ci/issues/938#issuecomment-77785455). So you need to start the Chrome Driver with `--no-sandbox` argument to avoid errors.
 
-In the [Protractor configuration file](https://github.com/sequenceiq/uluwatu-e2e-protractor/blob/master/e2e.conf.js#L25-L30):
+Also in the Protractor configuration file:
 ```
 capabilities: {
      'browserName': 'chrome',
@@ -54,6 +53,7 @@ capabilities: {
      }
 },
 ```
+>You can find additional setup configurations in the [related Protractor Documentation](https://github.com/angular/protractor/blob/master/docs/browser-setup.md)
 
 ## --privileged
 Chrome uses sandboxing, therefore if you try and run Chrome within a non-privileged container you will receive the following message:
@@ -64,8 +64,7 @@ The `--privileged` flag gives the container almost the same privileges to the ho
 
 <sub>Based on the [Webnicer project](https://hub.docker.com/r/webnicer/protractor-headless/).</sub>
 
-## Run tests in CI
-   
+## Run tests in CI   
 The project's Makefile contains several rules what you can use with your CI jobs. For example:
 ```   
    run-ci:
@@ -94,10 +93,10 @@ If you do not want to use Make, here is a code snippet that you can apply:
      docker rm -f $TEST_CONTAINER_NAME
    fi
    
-   CLOUD_URL_RESPONSE=$(curl -k --write-out %{http_code} --silent --output /dev/null $CLOUD_URL/sl)
-   echo $CLOUD_URL " HTTP status code is: " $CLOUD_URL_RESPONSE
-   if [[ $CLOUD_URL_RESPONSE -ne 200 ]]; then
-       echo $CLOUD_URL " Web GUI is not accessible!"
+   BASE_URL_RESPONSE=$(curl -k --write-out %{http_code} --silent --output /dev/null $BASE_URL/sl)
+   echo $BASE_URL " HTTP status code is: " $BASE_URL_RESPONSE
+   if [[ $BASE_URL_RESPONSE -ne 200 ]]; then
+       echo $BASE_URL " Web GUI is not accessible!"
        RESULT=1
    else
        docker run -i \
