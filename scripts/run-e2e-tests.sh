@@ -13,7 +13,9 @@ npm install
 node ./node_modules/protractor/bin/webdriver-manager update
 # X11 for Ubuntu is not configured! The following configurations are needed for XVFB.
 # Make a new display :21 with virtual screen 0 with resolution 1024x768 24dpi
-Xvfb :10 -screen 0 1920x1080x24 2>&1 >/dev/null &
+SCREEN_RESOLUTION=${SCREEN_RESOLUTION:-1280x1024x24}
+echo "Screen resolution ${SCREEN_RESOLUTION}"
+Xvfb :10 -screen 0 $SCREEN_RESOLUTION 2>&1 >/dev/null &
 # Export the previously created display
 # export DISPLAY=:10.0
 
