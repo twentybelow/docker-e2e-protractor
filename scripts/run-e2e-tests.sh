@@ -25,7 +25,7 @@ XVFB_PID=$!
 #echo "Starting webdriver"
 #node ./node_modules/protractor/bin/webdriver-manager start [OR webdriver-manager start] &
 #echo "Finished starting webdriver"
-sleep 20
+sleep 5
 
 echo "Running Protractor tests"
 # The 'uluwatu-e2e-protractor' test project launch configuration file (e2e.conf.js) should be passed here.
