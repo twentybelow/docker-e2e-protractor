@@ -16,6 +16,7 @@ node ./node_modules/protractor/bin/webdriver-manager update
 SCREEN_RESOLUTION=${SCREEN_RESOLUTION:-1280x1024x24}
 echo "Screen resolution ${SCREEN_RESOLUTION}"
 Xvfb :10 -screen 0 $SCREEN_RESOLUTION 2>&1 >/dev/null &
+XVFB_PID=$!
 # Export the previously created display
 # export DISPLAY=:10.0
 
@@ -32,7 +33,7 @@ export RESULT=$?
 
 echo "Protractor tests have done"
 # Close the XVFB display
-killall Xvfb
+kill $XVFB_PID
 # Remove temporary folders
 rm -rf .config .local .pki .cache .dbus .gconf .mozilla
 # Set the file access permissions (read, write and access) recursively for the result folders
